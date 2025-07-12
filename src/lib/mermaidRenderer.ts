@@ -1,6 +1,6 @@
-import type { Mermaid as MermaidNS } from 'mermaid'
+import type { Mermaid } from 'mermaid'
 
-let mermaid: typeof MermaidNS | undefined
+let mermaid: Mermaid | undefined
 let initDone = false
 let seq = 0
 
