@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { EditorView, basicSetup } from 'codemirror'
 import { EditorState } from '@codemirror/state'
-import { mermaid } from 'codemirror-lang-mermaid'
 import { cn } from '@/lib/utils'
 import { useElementSize } from '@/hooks/useElementSize'
 
@@ -41,7 +40,6 @@ export function Editor({ value, onChange }: EditorProps) {
       doc: value,
       extensions: [
         basicSetup,
-        mermaid(),
         EditorView.theme({
           '.cm-content': {
             fontSize: 'var(--editor-font-size, 14px)',
