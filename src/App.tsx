@@ -5,25 +5,14 @@ import type { PreviewRef } from './components/Preview'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { Select } from '@/components/ui/select'
+import type { SelectOption } from '@/components/ui/select'
 import { Download, Trash2 } from 'lucide-react'
+import { mermaidExamples, defaultExample } from '@/examples/mermaidExamples'
 
 function App() {
-  const [code, setCode] = useState(`sequenceDiagram
-    participant User as 👤 User
-    participant App as 🤖 AI app
-    participant LLM as 🧠 LLM Provider (OpenAI)
-    participant Tool as ⚙️ Function/Tool
-
-    User->>App: 💬 Prompt
-    App->>LLM: 📤 Prompt + function schema
-    LLM-->>App: 🛠️ function name + arguments
-    App->>Tool: ⚡ Invoke function (with arguments)
-    Tool-->>App: ✅ Result
-    App->>LLM: 📥 Result returned as context
-    LLM-->>App: 🎯 Final answer
-    App-->>User: 💬 Response
-
-    Note over User,Tool: Function calling workflow`)
+  const [code, setCode] = useState(defaultExample.code)
+  const [selectedExample, setSelectedExample] = useState(defaultExample.id)
 
   const [editorWidth, setEditorWidth] = useState(50) // Percentage
   const [isDragging, setIsDragging] = useState(false)
@@ -31,8 +20,24 @@ function App() {
   const containerRef = useRef<HTMLDivElement>(null)
   const previewRef = useRef<PreviewRef>(null)
 
+  // Create select options from examples
+  const exampleOptions: SelectOption[] = mermaidExamples.map(example => ({
+    value: example.id,
+    label: example.name,
+    group: example.category
+  }))
+
+  const handleExampleChange = (exampleId: string) => {
+    const example = mermaidExamples.find(ex => ex.id === exampleId)
+    if (example) {
+      setCode(example.code)
+      setSelectedExample(exampleId)
+    }
+  }
+
   const handleClear = () => {
     setCode('')
+    setSelectedExample('')
   }
 
   const handleExportPng = async () => {
@@ -102,7 +107,16 @@ function App() {
         <header className="border-b bg-card px-6 py-4">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-semibold text-foreground">Mermaid Editor</h1>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
+              <div className="w-64">
+                <Select
+                  value={selectedExample}
+                  onValueChange={handleExampleChange}
+                  options={exampleOptions}
+                  placeholder="Select an example..."
+                />
+              </div>
+              <div className="flex items-center gap-2">
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button 
@@ -129,6 +143,7 @@ function App() {
                 <p>Clear the editor content</p>
               </TooltipContent>
             </Tooltip>
+              </div>
             </div>
           </div>
         </header>
