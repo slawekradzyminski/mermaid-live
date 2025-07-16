@@ -1,17 +1,43 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { cn } from '@/lib/utils'
 import { renderMermaid } from '@/lib/mermaidRenderer'
+import { exportSvgFromContainer } from '@/lib/exportUtils'
+import type { ExportOptions } from '@/lib/exportUtils'
 
 interface PreviewProps {
   code: string
 }
 
-export function Preview({ code }: PreviewProps) {
+export interface PreviewRef {
+  exportToPng: (options?: ExportOptions) => Promise<void>
+}
+
+export const Preview = forwardRef<PreviewRef, PreviewProps>(({ code }, ref) => {
   const previewRef = useRef<HTMLDivElement>(null)
   const [error, setError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false) // Start without loading overlay
+  const [isLoading, setIsLoading] = useState(false)
+  const [isExporting, setIsExporting] = useState(false)
   const isInitialRender = useRef(true)
+
+  useImperativeHandle(ref, () => ({
+    exportToPng: async (options?: ExportOptions) => {
+      if (!previewRef.current) {
+        throw new Error('Preview container not found')
+      }
+      
+      if (!code.trim()) {
+        throw new Error('No diagram to export')
+      }
+
+      setIsExporting(true)
+      try {
+        await exportSvgFromContainer(previewRef.current, options)
+      } finally {
+        setIsExporting(false)
+      }
+    }
+  }))
 
   useEffect(() => {
     if (!code.trim()) {
@@ -24,7 +50,6 @@ export function Preview({ code }: PreviewProps) {
     }
 
     const renderDiagram = async () => {
-      // Only show loading for subsequent renders, not the initial one
       if (!isInitialRender.current) {
         setIsLoading(true)
       }
@@ -52,11 +77,11 @@ export function Preview({ code }: PreviewProps) {
 
   return (
     <div data-testid="preview" className="h-full relative border border-border rounded-md">
-      {isLoading && (
+      {(isLoading || isExporting) && (
         <div className="absolute inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm z-10">
           <div className="flex items-center gap-2 text-muted-foreground">
             <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-            Loading...
+            {isExporting ? 'Exporting...' : 'Loading...'}
           </div>
         </div>
       )}
@@ -80,4 +105,6 @@ export function Preview({ code }: PreviewProps) {
       />
     </div>
   )
-} 
+})
+
+Preview.displayName = 'Preview' 

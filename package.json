@@ -26,6 +26,7 @@
     "clsx": "^2.1.1",
     "codemirror": "^6.0.2",
     "codemirror-lang-mermaid": "^0.5.0",
+    "html-to-image": "^1.11.13",
     "lucide-react": "^0.525.0",
     "lz-string": "^1.5.0",
     "mermaid": "^11.8.1",
