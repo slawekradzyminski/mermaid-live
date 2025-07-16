@@ -3,6 +3,7 @@ import { EditorView, basicSetup } from 'codemirror'
 import { EditorState } from '@codemirror/state'
 import { mermaid } from 'codemirror-lang-mermaid'
 import { cn } from '@/lib/utils'
+import { useElementSize } from '@/hooks/useElementSize'
 
 interface EditorProps {
   value: string
@@ -13,11 +14,24 @@ export function Editor({ value, onChange }: EditorProps) {
   const editorRef = useRef<HTMLDivElement>(null)
   const viewRef = useRef<EditorView | null>(null)
   const onChangeRef = useRef(onChange)
+  const { width } = useElementSize(editorRef)
 
   // Keep onChange ref up to date
   useEffect(() => {
     onChangeRef.current = onChange
   }, [onChange])
+
+  // Calculate responsive font size based on editor panel width
+  const getFontSize = (editorWidth: number): string => {
+    if (editorWidth < 300) return '10px'  // Very narrow
+    if (editorWidth < 400) return '11px'  // Narrow
+    if (editorWidth < 500) return '12px'  // Medium narrow
+    if (editorWidth < 600) return '13px'  // Medium
+    if (editorWidth < 700) return '14px'  // Medium wide
+    return '15px'  // Wide
+  }
+
+  const fontSize = getFontSize(width)
 
   // Initialize editor (only once)
   useEffect(() => {
@@ -30,8 +44,12 @@ export function Editor({ value, onChange }: EditorProps) {
         mermaid(),
         EditorView.theme({
           '.cm-content': {
+            fontSize: 'var(--editor-font-size, 14px)',
             lineHeight: '1.6',
             fontFamily: '"JetBrains Mono", "SF Mono", Monaco, Inconsolata, "Roboto Mono", Consolas, "Droid Sans Mono", monospace'
+          },
+          '.cm-editor': {
+            fontSize: 'var(--editor-font-size, 14px)'
           }
         }),
         EditorView.updateListener.of((update) => {
@@ -74,13 +92,11 @@ export function Editor({ value, onChange }: EditorProps) {
       ref={editorRef} 
       className={cn(
         'h-full w-full overflow-auto border-r border-border bg-background',
-        'focus-within:ring-1 focus-within:ring-ring',
-        // Responsive font sizing using CSS
-        'text-xs sm:text-sm md:text-base'
+        'focus-within:ring-1 focus-within:ring-ring'
       )}
       style={{
-        fontSize: 'clamp(10px, 2.5vw, 15px)'
-      }}
+        '--editor-font-size': fontSize
+      } as React.CSSProperties}
     />
   )
 } 
