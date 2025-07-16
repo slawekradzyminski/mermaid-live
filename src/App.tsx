@@ -6,10 +6,22 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 function App() {
-  const [code, setCode] = useState(`graph TD
-    A[Start] --> B{Is it?}
-    B -->|Yes| C[OK]
-    B -->|No| D[End]`)
+  const [code, setCode] = useState(`sequenceDiagram
+    participant User as 👤 User
+    participant App as 🤖 AI app
+    participant LLM as 🧠 LLM Provider (OpenAI)
+    participant Tool as ⚙️ Function/Tool
+
+    User->>App: 💬 Prompt
+    App->>LLM: 📤 Prompt + function schema
+    LLM-->>App: 🛠️ function name + arguments
+    App->>Tool: ⚡ Invoke function (with arguments)
+    Tool-->>App: ✅ Result
+    App->>LLM: 📥 Result returned as context
+    LLM-->>App: 🎯 Final answer
+    App-->>User: 💬 Response
+
+    Note over User,Tool: Function calling workflow`)
 
   const [editorWidth, setEditorWidth] = useState(50) // Percentage
   const [isDragging, setIsDragging] = useState(false)

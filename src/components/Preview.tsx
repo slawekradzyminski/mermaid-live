@@ -51,7 +51,7 @@ export function Preview({ code }: PreviewProps) {
   }, [code])
 
   return (
-    <div className="h-full relative border border-border rounded-md">
+    <div data-testid="preview" className="h-full relative border border-border rounded-md">
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm z-10">
           <div className="flex items-center gap-2 text-muted-foreground">

@@ -37,7 +37,7 @@ export function Editor({ value, onChange }: EditorProps) {
     return () => {
       viewRef.current?.destroy()
     }
-  }, [])
+  }, [value, onChange])
 
   useEffect(() => {
     if (viewRef.current && viewRef.current.state.doc.toString() !== value) {
@@ -54,6 +54,8 @@ export function Editor({ value, onChange }: EditorProps) {
   return (
     <div 
       ref={editorRef} 
+      data-testid="editor"
+      aria-label="editor"
       className={cn(
         "h-full border border-border rounded-md",
         "text-sm font-mono",

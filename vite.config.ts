@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   base: process.env.NODE_ENV === 'production' ? '/mermaid-live' : '/',
   server: {
-    port: 5175
+    port: 3000
   },
   worker: {
     format: 'es'

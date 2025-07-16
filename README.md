@@ -39,7 +39,8 @@ pnpm dev
 
 ```bash
 # Development
-pnpm dev          # Start development server
+pnpm dev          # Start development server (port 3000)
+pnpm start        # Start with process management (kills existing, waits for ready)
 pnpm preview      # Preview production build
 
 # Building
@@ -51,7 +52,30 @@ pnpm test         # Run unit tests
 pnpm test:watch   # Run tests in watch mode
 pnpm test:ui      # Run tests with UI
 pnpm test:e2e     # Run E2E tests
+
+# Quality Assurance
+pnpm regression   # Run full regression suite (lint + test + build)
 ```
+
+## 🚀 Quick Start
+
+```bash
+# Install dependencies
+pnpm install
+
+# Start the application (recommended)
+pnpm start        # Kills existing processes, starts server, waits for ready
+
+# Or use development mode
+pnpm dev          # Standard Vite development server
+```
+
+The `pnpm start` script uses an advanced process management approach:
+- Automatically kills any existing Vite processes on port 3000
+- Starts the development server
+- Waits for the server to be responsive
+- Provides colored output with status updates
+- Returns the application URL when ready
 
 ## 🚀 Deployment
 
@@ -87,6 +111,18 @@ pnpm test:watch     # Watch mode for development
 ```bash
 pnpm test:e2e       # Run Playwright tests
 ```
+
+### Regression Testing
+```bash
+pnpm regression     # Run full regression suite
+```
+
+The regression script runs the complete quality assurance pipeline:
+1. **Linting**: ESLint checks for code quality and consistency
+2. **Unit Tests**: All Vitest unit and integration tests
+3. **Build**: TypeScript compilation and Vite production build
+
+This ensures all code changes pass the full quality gate before deployment.
 
 The project includes comprehensive test coverage:
 - **Component tests**: Editor, Preview components

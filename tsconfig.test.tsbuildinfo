@@ -1,1 +1,1 @@
-{"root":["./src/components/Editor.test.tsx","./src/components/Preview.persistence.test.tsx","./src/components/Preview.test.tsx","./src/test/setup.ts"],"version":"5.8.3"}
+{"root":["./src/App.test.tsx","./src/components/Editor.test.tsx","./src/components/Preview.persistence.test.tsx","./src/components/Preview.test.tsx","./src/test/setup.ts"],"version":"5.8.3"}

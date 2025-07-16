@@ -7,7 +7,7 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 # Configuration
-PORT=5175
+PORT=3000
 URL="http://localhost:${PORT}"
 MAX_WAIT=30 # Maximum wait time in seconds
 

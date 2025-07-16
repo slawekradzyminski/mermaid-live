@@ -11,7 +11,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
-    "test:e2e": "playwright test --reporter=list"
+    "test:e2e": "playwright test --reporter=list",
+    "regression": "pnpm run lint && pnpm test && pnpm run build",
+    "start": "./start-app.sh"
   },
   "dependencies": {
     "@codemirror/basic-setup": "^0.20.0",
